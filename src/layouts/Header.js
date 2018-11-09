@@ -4,9 +4,6 @@ import logo from '../img/knvm-logo.png';
 import '../basscss.min.css';
 import '../index.css';
 
-
-
-
 class Header extends Component {
   render() {
     return (
@@ -17,10 +14,10 @@ class Header extends Component {
 					<ul className="list-reset pop f12 caps">
 			 			<li className="inline-block mr1"><Link to="/home" className="text-decoration-none hitam to-grey">welcome</Link></li>
 			 			<li className="inline-block mr1"><Link to="/about" className="text-decoration-none hitam to-grey">about</Link></li>
-			 			{/* <li className="inline-block mr1"><Link to="" className="text-decoration-none hitam to-grey">process</Link></li>
-			 			<li className="inline-block mr1"><Link to="" className="text-decoration-none hitam to-grey">services</Link></li>
-			 			<li className="inline-block mr1"><Link to="" className="text-decoration-none hitam to-grey">faq's</Link></li>
-			 			<li className="inline-block"><Link to="" className="text-decoration-none hitam to-grey">inquire</Link></li> */}
+			 			<li className="inline-block mr1"><Link to="/portfolio" className="text-decoration-none hitam to-grey">portfolio</Link></li>
+			 			<li className="inline-block mr1"><Link to="/services" className="text-decoration-none hitam to-grey">services</Link></li>
+			 			<li className="inline-block mr1"><Link to="/inquire" className="text-decoration-none hitam to-grey btn-merah p1">inquire</Link></li>
+			 		{/* 		<li className="inline-block"><Link to="" className="text-decoration-none hitam to-grey">inquire</Link></li> */}
 			 		</ul>
 					</nav>
 

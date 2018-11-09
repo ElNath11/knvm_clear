@@ -3,11 +3,19 @@ import '../basscss.min.css';
 import '../index.css';
 import banner from '../img/banner.png';
 import Carousel from 'nuka-carousel';
+import CountUp, {startAnimation} from 'react-countup';
+import VisibilitySensor from 'react-visibility-sensor';
+
+const style = {
+  componentName: {},
+  col: {},
+  countup: {},
+};
 
 // const colors = ["7732bb", "047cc0", "00884b", "e3bc13", "db7c00", "aa231f"];
 
 class Home extends Component {
-  constructor() {
+  constructor(props) {
     super(...arguments);
     this.state = {
       slideIndex: 0,
@@ -19,14 +27,25 @@ class Home extends Component {
       transitionMode: "scroll",
       heightMode: "max",
       withoutControls: false
+
+      
     };
 
-    this.handleImageClick = this.handleImageClick.bind(this);
+    // this.handleImageClick = this.handleImageClick.bind(this);
+
+    // super(props);
+    // this.onVisibilityChange = this.onVisibilityChange.bind(this); // Bind for appropriate 'this' context
   }
 
-  handleImageClick() {
-    this.setState({ underlineHeader: !this.state.underlineHeader });
-  }
+  // handleImageClick() {
+  //   this.setState({ underlineHeader: !this.state.underlineHeader });
+  // }
+
+  // onVisibilityChange(isVisible) {
+  //   if (isVisible) {
+  //     startAnimation(this.CountUp);
+  //   }
+  // }
 
   render() {
     return (			
@@ -61,7 +80,6 @@ class Home extends Component {
                 <h1 className="caps hitam libre f24">Services</h1>
                 <p className="f18 hitam pop">Everything you need from a design studio, under one roof.</p>
                 <div className="col col-12 px4">
-
                   <div className="col col-12 lg-col-4 px1">
                     <ul className="list-reset">
                       <li className="f18 hitam libre caps mb2">branding</li>
@@ -87,8 +105,6 @@ class Home extends Component {
                     </ul>
                   </div>
                 </div>
-
-
                   <div className="col col-12 px3">
                   <button className="center text-decoration-none btn-merah p2">READ UP ON OUR PROCESS AND WHAT YOU CAN EXPECT from clover & crow</button>
                   {/* <a href="#" className="center text-decoration-none btn-merah p2">READ UP ON OUR PROCESS AND WHAT YOU CAN EXPECT from clover & crow</a> */}
@@ -114,7 +130,18 @@ class Home extends Component {
 
                   <div className="col col-12 lg-col-4">
                     <ul className="list-reset">
-                      <li className="block maroon caps f58">376</li>
+                      <li className="block maroon caps f58">
+                     
+                      <VisibilitySensor
+            onChange={this.onVisibilityChange}
+            delayedCall // Prevents react apps triggering elements as visible before styles are loaded
+          >
+            <CountUp className={style.countup} decimals={1} start={0} end={480}  duration={3}
+                     ref={countUp => { this.CountUp = countUp; }} // From react-countup README 
+            />
+          </VisibilitySensor>
+
+                      </li>
                       <li className="block pop caps hitam">happy clients</li>
                     </ul>
                   </div>
