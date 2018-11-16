@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../img/knvm-logo.png';
-import '../basscss.min.css';
-import '../index.css';
+
 
 
 class Footer extends Component {

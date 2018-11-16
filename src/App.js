@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import {Route, Switch} from 'react-router-dom';
+
 import './App.css';
 import Header from './layouts/Header';
 import Home from './layouts/Home';
 import Footer from './layouts/Footer';
-// import Home from '../App';
+
 import AboutPage from './layouts/AboutPage.js';
 import Portfolio from './layouts/Portfolio.js';
 import Services from './layouts/Services.js';
@@ -27,5 +28,7 @@ class App extends Component {
     );
   }
 }
+
+
 
 export default App;

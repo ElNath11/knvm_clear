@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import '../basscss.min.css';
-import '../index.css';
+
 import port1 from '../img/Mockup Web 1.png';
 import port2 from '../img/Safe Label Design.png';
 import port3 from '../img/SAFE MOCKUP 1.jpg';

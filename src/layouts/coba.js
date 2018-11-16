@@ -1,9 +1,133 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+const inputParsers = {
+    date(input) {
+      const split = input.split('/');
+      const day = split[1]
+      const month = split[0];
+      const year = split[2];
+      return `${year}-${month}-${day}`;
+    },
+    uppercase(input) {
+      return input.toUpperCase();
+    },
+    number(input) {
+      return parseFloat(input);
+    },
+  };
+  
+  class ShakingError extends React.Component {
+      constructor() { super(); this.state = { key: 0 }; }
+  
+      componentWillReceiveProps() {
+      // update key to remount the component to rerun the animation
+        this.setState({ key: ++this.state.key });
+    }
+    
+    render() {
+        return <div key={this.state.key} className="bounce">{this.props.text}</div>;
+    }
+  }
+  
+  class MyForm extends React.Component {
+    constructor() {
+      super();
+      this.state = {};
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+  
+    handleSubmit(event) {
+      event.preventDefault();
+      if (!event.target.checkValidity()) {
+          this.setState({
+          invalid: true,
+          displayErrors: true,
+        });
+        return;
+      }
+      const form = event.target;
+      const data = new FormData(form);
+  
+      for (let name of data.keys()) {
+        const input = form.elements[name];
+        const parserName = input.dataset.parse;
+        console.log('parser name is', parserName);
+        if (parserName) {
+          const parsedValue = inputParsers[parserName](data.get(name))
+          data.set(name, parsedValue);
+        }
+      }
+      
+      this.setState({
+          res: stringifyFormData(data),
+        invalid: false,
+        displayErrors: false,
+      });
+  
+      // fetch('/api/form-submit-url', {
+      //   method: 'POST',
+      //   body: data,
+      // });
+    }
+  
+    render() {
+        const { res, invalid, displayErrors } = this.state;
+      return (
+          <div>
+          <form
+            onSubmit={this.handleSubmit}
+            noValidate
+            className={displayErrors ? 'displayErrors' : ''}
+           >
+            <label htmlFor="username">Username:</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              data-parse="uppercase"
+            />
+            <label htmlFor="email">Email:</label>
+            <input id="email" name="email" type="email" required />
+            <label htmlFor="birthdate">Birthdate:</label>
+            <input
+              id="birthdate"
+              name="birthdate"
+              type="text"
+              data-parse="date"
+              placeholder="MM/DD//YYYY"
+              pattern="\d{2}\/\d{2}/\d{4}"
+              required
+            />
+  
+            <button>Send data!</button>
+          </form>                  
+          <div className="res-block">
+            {invalid && (
+              <ShakingError text="Form is not valid" />
+            )}
+            {!invalid && res && (
+                <div>
+                <h3>Transformed data to be sent:</h3>
+                <pre>FormData {res}</pre>
+                </div>
+            )}
+          </div>
+          </div>
+      );
+    }
+  }
+  ReactDOM.render(
+      <MyForm />,
+    document.getElementById('app')
+  );
+  function stringifyFormData(fd) {
+    const data = {};
+      for (let key of fd.keys()) {
+        data[key] = fd.get(key);
+    }
+    return JSON.stringify(data, null, 2);
+  }
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials = true;
-axios.defaults.crossDomain = true;
+  import React, { Component } from 'react';
+  import axios from 'axios';
 
 // app.use(bodyParser.json())
 // app.use(bodyParser.urlencoded({ extended: false }))
@@ -157,19 +281,19 @@ class Inquire extends Component {
 constructor() {
   super();
   this.state = {
-    form_name: '',
-    form_email: '',
-    form_phone: '',
-    form_location: '',
-    form_targetdate: '',
-    form_industry: '',
-    form_budget: '',
-    form_hear: '',
-    form_message: ''
+    name: '',
+    email: '',
+    phone: '',
+    location: '',
+    targetdate: '',
+    industry: '',
+    budget: '',
+    hear: '',
+    message: ''
   };
 }
 
-handleOnChange = (e) => {
+onChange = (e) => {
   /*
     Because we named the inputs to match their
     corresponding values in state, it's
@@ -178,41 +302,14 @@ handleOnChange = (e) => {
   this.setState({ [e.target.name]: e.target.value });
 }
 
-_handleSubmit = (e) => {
+onSubmit = (e) => {
   e.preventDefault();
   // get our form data out of state
-  const { 
-    form_name,
-    form_email,
-    form_phone,
-    form_location,
-    form_targetdate,
-    form_industry,
-    form_budget,
-    form_hear,
-    form_message } = this.state;
-    
-  axios.post("http://helloknvm.com/mail/mailer.php", { 
-    // axios.post("http://localhost:3000/inquire", { 
-    form_name,
-    form_email,
-    form_phone,
-    form_location,
-    form_targetdate,
-    form_industry,
-    form_budget,
-    form_hear,
-    form_message
-  },
-  // headers: {
-  //   'Access-Control-Allow-Origin': '*',
-  //   'Accept': 'application/json',
-  //   'Content-Type': 'application/json',
-  // }
-  )
-  
+  const { fname, lname, email } = this.state;
+
+  axios.post('/', { fname, lname, email })
     .then((result) => {
-      console.log(result);
+      //access the results here....
     });
 }
 
@@ -227,14 +324,14 @@ _handleSubmit = (e) => {
             </div>
             <div className="col-12 text-home-atas">
               {/* <form method="POST" onSubmit={this._handleSubmit} action="mailer.php"> */}
-              <form onSubmit={this._handleSubmit}>
+              <form className="form" onSubmit={this._handleSubmit} id="formContact">
               <div className="col col-12 mb2">
                 <label className="f14 pop hitam block left-align">Full Name:</label>                
                   <input type="text" className="col-12 text-input" 
                   placeholder='Your Name' 
                   name='form_name'
                   onChange={this.handleOnChange} 
-                  value={this.state.form_name}
+                  value={this.state.contactName}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -243,7 +340,7 @@ _handleSubmit = (e) => {
                    placeholder='Your Email' 
                    name='form_email'
                    onChange={this.handleOnChange} 
-                   value={this.state.form_email}
+                   value={this.state.email}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -252,7 +349,7 @@ _handleSubmit = (e) => {
                    placeholder='Your Phone Number' 
                    name='form_phone'
                    onChange={this.handleOnChange} 
-                   value={this.state.form_phone}
+                   value={this.state.phone}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -261,7 +358,7 @@ _handleSubmit = (e) => {
                    placeholder='Your Location' 
                    name='form_location'
                    onChange={this.handleOnChange} 
-                   value={this.state.form_location}
+                   value={this.state.clientLocation}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -270,7 +367,7 @@ _handleSubmit = (e) => {
                   placeholder='Your Target Date' 
                   name='form_targetdate'
                   onChange={this.handleOnChange} 
-                  value={this.state.form_targetdate}
+                  value={this.state.targetdate}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -279,7 +376,7 @@ _handleSubmit = (e) => {
                   placeholder='Your Bussiness Industry' 
                   name='form_industry'
                   onChange={this.handleOnChange} 
-                  value={this.state.form_industry}
+                  value={this.state.industry}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -288,7 +385,7 @@ _handleSubmit = (e) => {
                   placeholder='Your Budget' 
                   name='form_budget'
                   onChange={this.handleOnChange} 
-                  value={this.state.form_budget}
+                  value={this.state.budget}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -297,7 +394,7 @@ _handleSubmit = (e) => {
                   placeholder='You know us from' 
                   name='form_hear'
                   onChange={this.handleOnChange} 
-                  value={this.state.form_hear}
+                  value={this.state.hear}
                   required />
               </div>
               <div className="col col-12 mb2">
@@ -306,7 +403,7 @@ _handleSubmit = (e) => {
                 placeholder='Your Messagae' 
                 name='form_message'
                 onChange={this.handleOnChange} 
-                value={this.state.form_message}
+                value={this.state.message}
                 required />
               </div>
               <input className="btn-merah p2" type="submit" value="Submit" />

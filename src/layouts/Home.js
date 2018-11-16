@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import '../basscss.min.css';
-import '../index.css';
+
 import banner from '../img/banner.png';
 import Carousel from 'nuka-carousel';
 import CountUp, {startAnimation} from 'react-countup';

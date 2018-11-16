@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import '../basscss.min.css';
-import '../index.css';
+
 
 
 class Services extends Component {
